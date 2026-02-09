@@ -222,7 +222,19 @@ export const VideoGenerator: React.FC<VideoGeneratorProps> = ({
         }
       }
       
-      const apiKey = (sessionStorage.getItem('veopro_use_custom') === 'true' && sessionStorage.getItem('veopro_custom_key')) ? sessionStorage.getItem('veopro_custom_key')! : process.env.API_KEY;
+const res = await fetch("/api/generate-video", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    prompt,
+    mode: sessionStorage.getItem("veopro_use_custom") === "true"
+      ? "FREE"
+      : "PRO",
+    userApiKey: sessionStorage.getItem("veopro_custom_key")
+  })
+});
+
+const result = await res.json();
       
       const result = await generateVeoVideo({ 
         mode: activeMode, prompt, resolution, aspectRatio, images: reqImages, 
