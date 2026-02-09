@@ -1,3 +1,19 @@
+// ===== API KEY POOL (PRO USERS) =====
+const PAID_KEYS = (import.meta.env.VITE_GEMINI_API_KEYS_PAID || "")
+  .split("|")
+  .map(k => k.trim())
+  .filter(Boolean);
+
+let keyIndex = 0;
+
+function getNextPaidKey() {
+  if (PAID_KEYS.length === 0) {
+    throw new Error("No paid API keys configured");
+  }
+  const key = PAID_KEYS[keyIndex];
+  keyIndex = (keyIndex + 1) % PAID_KEYS.length;
+  return key;
+}
 
 import { GoogleGenAI, VideoGenerationReferenceType } from "@google/genai";
 import { Resolution, AspectRatio, VideoMode } from "../types";
